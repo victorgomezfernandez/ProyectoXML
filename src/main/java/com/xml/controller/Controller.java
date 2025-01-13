@@ -1,4 +1,4 @@
 package com.xml.controller;
 
-public class controller {
+public class Controller {
 }

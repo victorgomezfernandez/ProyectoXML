@@ -1,11 +1,11 @@
 package com.xml.model;
 
-public class card {
+public class Card {
     String name;
     String type;
     String set;
 
-    public card(String name, String type, String set) {
+    public Card(String name, String type, String set) {
         this.name = name;
         this.type = type;
         this.set = set;
