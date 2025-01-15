@@ -1,9 +1,19 @@
 package com.xml.model;
 
-public class Card {
-    String name;
-    String type;
-    String set;
+import java.io.Serializable;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlElement;
+
+@XmlRootElement(name = "card")
+public class Card implements Serializable {
+
+    private String name;
+    private String type;
+    private String set;
+
+    public Card() {
+
+    }
 
     public Card(String name, String type, String set) {
         this.name = name;
@@ -11,6 +21,7 @@ public class Card {
         this.set = set;
     }
 
+    @XmlElement
     public String getName() {
         return name;
     }
@@ -19,6 +30,7 @@ public class Card {
         this.name = name;
     }
 
+    @XmlElement
     public String getType() {
         return type;
     }
@@ -27,6 +39,7 @@ public class Card {
         this.type = type;
     }
 
+    @XmlElement
     public String getSet() {
         return set;
     }
@@ -34,4 +47,5 @@ public class Card {
     public void setSet(String set) {
         this.set = set;
     }
+
 }

@@ -1,7 +1,16 @@
-
 package com.xml.view;
 
 import com.xml.controller.Controller;
+import com.xml.model.Card;
+import com.xml.model.Cards;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.Marshaller;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -10,13 +19,15 @@ import com.xml.controller.Controller;
 public class Form extends javax.swing.JFrame {
 
     Controller controller = new Controller();
-    
+    DefaultTableModel tableModel;
+
     /**
      * Creates new form Form
      */
     public Form(Controller controller) {
         initComponents();
         controller = controller;
+        tableModel = (DefaultTableModel) cardsTable.getModel();
     }
 
     /**
@@ -32,12 +43,14 @@ public class Form extends javax.swing.JFrame {
         cardsTable = new javax.swing.JTable();
         saveButton = new javax.swing.JButton();
         addButton = new javax.swing.JButton();
+        openButton = new javax.swing.JButton();
+        removeButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         cardsTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null}
+
             },
             new String [] {
                 "Name", "Type", "Set"
@@ -55,8 +68,32 @@ public class Form extends javax.swing.JFrame {
 
         saveButton.setText("SAVE");
         saveButton.setActionCommand("saveButton");
+        saveButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveButtonActionPerformed(evt);
+            }
+        });
 
         addButton.setText("ADD ROW");
+        addButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addButtonActionPerformed(evt);
+            }
+        });
+
+        openButton.setText("OPEN FILE");
+        openButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                openButtonActionPerformed(evt);
+            }
+        });
+
+        removeButton.setText("REMOVE ROW");
+        removeButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removeButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -68,7 +105,11 @@ public class Form extends javax.swing.JFrame {
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 523, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(addButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(removeButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(openButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(saveButton)))
                 .addContainerGap())
         );
@@ -80,12 +121,86 @@ public class Form extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(saveButton)
-                    .addComponent(addButton))
+                    .addComponent(addButton)
+                    .addComponent(openButton)
+                    .addComponent(removeButton))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    
+    private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
+        addRow();
+    }//GEN-LAST:event_addButtonActionPerformed
+
+    private void openButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openButtonActionPerformed
+        openFile();
+    }//GEN-LAST:event_openButtonActionPerformed
+
+    private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
+        saveXmlFile();
+    }//GEN-LAST:event_saveButtonActionPerformed
+
+    private void removeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeButtonActionPerformed
+        removeRow();
+    }//GEN-LAST:event_removeButtonActionPerformed
+
+    public ArrayList<Card> getCards(){
+        ArrayList<Card> cards = new ArrayList<Card>();
+        for (int i = 0; i < tableModel.getRowCount(); i++) {
+            String cardName = tableModel.getValueAt(i, 0) != null ? tableModel.getValueAt(i, 0).toString() : "";
+            String cardType = tableModel.getValueAt(i, 1) != null ? tableModel.getValueAt(i, 1).toString() : "";
+            String cardSet = tableModel.getValueAt(i, 2) != null ? tableModel.getValueAt(i, 2).toString() : "";
+            cards.add(new Card(cardName, cardType, cardSet));
+        }
+        return cards;
+    }
+    
+    public void saveXmlFile(){
+        JFileChooser fileChooser = new JFileChooser();
+        int result = fileChooser.showSaveDialog(this);
+
+        if (result == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = fileChooser.getSelectedFile();
+            String filePath = selectedFile.getAbsolutePath();
+
+            if (!filePath.endsWith(".xml")) {
+                filePath += ".xml";
+            }
+            ArrayList<Card> cards = getCards();
+            controller.saveXml(cards, filePath);
+
+        }
+    }
+    
+    public void openFile() {
+        JFileChooser fileChooser = new JFileChooser();
+        int result = fileChooser.showOpenDialog(this);
+        if (result == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = fileChooser.getSelectedFile();
+            String filePath = selectedFile.getAbsolutePath();
+            ArrayList<Card> cards = controller.loadXml(filePath);
+            for (Card card : cards) {
+                tableModel.addRow(new Object[]{
+                    card.getName(),
+                    card.getType(),
+                    card.getSet()
+                });
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Por favor, selecciona un archivo valido.");
+        }
+    }
+
+    public void addRow() {
+        tableModel.addRow(new Object[]{"", "", ""});
+    }
+    
+    public void removeRow() {
+        tableModel.removeRow(cardsTable.getSelectedRow());
+    }
 
     /**
      * @param args the command line arguments
@@ -125,6 +240,8 @@ public class Form extends javax.swing.JFrame {
     private javax.swing.JButton addButton;
     private javax.swing.JTable cardsTable;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JButton openButton;
+    private javax.swing.JButton removeButton;
     private javax.swing.JButton saveButton;
     // End of variables declaration//GEN-END:variables
 }

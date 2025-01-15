@@ -29,7 +29,11 @@
                   <Component id="jScrollPane1" pref="523" max="32767" attributes="0"/>
                   <Group type="102" alignment="1" attributes="0">
                       <Component id="addButton" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="removeButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
+                      <Component id="openButton" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Component id="saveButton" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -46,6 +50,8 @@
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="saveButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="addButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="openButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="removeButton" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="32767" attributes="0"/>
           </Group>
@@ -63,7 +69,7 @@
         <Component class="javax.swing.JTable" name="cardsTable">
           <Properties>
             <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-              <Table columnCount="3" rowCount="1">
+              <Table columnCount="3" rowCount="0">
                 <Column editable="true" title="Name" type="java.lang.String"/>
                 <Column editable="true" title="Type" type="java.lang.String"/>
                 <Column editable="true" title="Set" type="java.lang.String"/>
@@ -78,11 +84,33 @@
         <Property name="text" type="java.lang.String" value="SAVE"/>
         <Property name="actionCommand" type="java.lang.String" value="saveButton"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="saveButtonActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="addButton">
       <Properties>
         <Property name="text" type="java.lang.String" value="ADD ROW"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="addButtonActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="openButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="OPEN FILE"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="openButtonActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="removeButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="REMOVE ROW"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="removeButtonActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>
